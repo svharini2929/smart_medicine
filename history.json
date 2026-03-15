@@ -1,0 +1,18 @@
+[
+    {
+        "medicine_id": 1,
+        "medicine_name": "Blood Pressure Tablet",
+        "date": "2026-03-14",
+        "time": "08:00",
+        "status": "Taken",
+        "updated_at": "08:05:12"
+    },
+    {
+        "medicine_id": 2,
+        "medicine_name": "Diabetes Medicine",
+        "date": "2026-03-14",
+        "time": "13:00",
+        "status": "Skipped",
+        "updated_at": "13:20:41"
+    }
+]

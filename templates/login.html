@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedAssist Pro | Sign In</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-page">
+    <div class="auth-wrapper">
+        <section class="auth-brand-panel">
+            <div class="brand-tag">MedAssist Pro</div>
+            <h1>Professional Medicine Management for Elderly Care</h1>
+            <p>
+                A smart healthcare dashboard for medicine adherence, appointment tracking,
+                emergency support, and caregiver coordination.
+            </p>
+
+            <div class="brand-points">
+                <div class="brand-point">
+                    <div class="icon-box">✓</div>
+                    <div>
+                        <h3>Medicine Adherence</h3>
+                        <p>Track taken, skipped, and pending medicines with clarity.</p>
+                    </div>
+                </div>
+
+                <div class="brand-point">
+                    <div class="icon-box">✓</div>
+                    <div>
+                        <h3>Appointment Scheduling</h3>
+                        <p>Organize doctor visits, time slots, and checkup purposes.</p>
+                    </div>
+                </div>
+
+                <div class="brand-point">
+                    <div class="icon-box">✓</div>
+                    <div>
+                        <h3>Emergency Readiness</h3>
+                        <p>Maintain quick access to doctors and family contacts.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="auth-card">
+            <div class="auth-card-top">
+                <h2>Sign In</h2>
+                <p>Use your username and password to access the dashboard.</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" class="auth-form">
+                <div class="field">
+                    <label>Username</label>
+                    <input type="text" name="username" placeholder="Enter username" required>
+                </div>
+
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Enter password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary full-btn">Sign In</button>
+            </form>
+
+            <div class="demo-credentials">
+                <h4>Demo Credentials</h4>
+                <div class="credential-row">
+                    <span>Patient</span>
+                    <strong>cathy / 1234</strong>
+                </div>
+                <div class="credential-row">
+                    <span>Caregiver</span>
+                    <strong>family / 1234</strong>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

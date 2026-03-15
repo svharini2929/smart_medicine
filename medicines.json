@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "name": "Blood Pressure Tablet",
+        "dosage": "1 tablet",
+        "day": "Sunday",
+        "time": "08:00",
+        "note": "After breakfast"
+    },
+    {
+        "id": 2,
+        "name": "Diabetes Medicine",
+        "dosage": "1 tablet",
+        "day": "Sunday",
+        "time": "13:00",
+        "note": "After lunch"
+    },
+    {
+        "id": 3,
+        "name": "Calcium Tablet",
+        "dosage": "1 tablet",
+        "day": "Sunday",
+        "time": "20:00",
+        "note": "After dinner"
+    },
+    {
+        "id": 4,
+        "name": "Vitamin D",
+        "dosage": "1 capsule",
+        "day": "Monday",
+        "time": "09:00",
+        "note": "Morning dose"
+    },
+    {
+        "id": 5,
+        "name": "Pain Relief Tablet",
+        "dosage": "1 tablet",
+        "day": "Tuesday",
+        "time": "19:00",
+        "note": "If arthritis pain increases"
+    }
+]

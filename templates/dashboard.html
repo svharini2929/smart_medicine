@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedAssist Pro | Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard-page">
+    <div class="dashboard-layout">
+
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-mark">M</div>
+                <div>
+                    <h2>MedAssist Pro</h2>
+                    <p>Elderly Care Platform</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#overview" class="nav-item active">Overview</a>
+                <a href="#medicines" class="nav-item">Medicines</a>
+                <a href="#appointments" class="nav-item">Appointments</a>
+                <a href="#contacts" class="nav-item">Emergency Contacts</a>
+                <a href="#history" class="nav-item">History</a>
+            </nav>
+
+            <div class="user-panel">
+                <p class="user-panel-label">Signed in as</p>
+                <h3>{{ username }}</h3>
+                <span class="role-badge">{{ role }}</span>
+            </div>
+
+            <a href="{{ url_for('logout') }}" class="btn btn-danger sidebar-btn">Sign Out</a>
+        </aside>
+
+        <main class="main-content">
+            <header class="page-header">
+                <div>
+                    <p class="eyebrow">Healthcare Dashboard</p>
+                    <h1>Medicine Monitoring & Patient Support</h1>
+                    <p class="page-subtext">{{ today_name }} • {{ today_date_value }}</p>
+                </div>
+                <div class="header-badge">
+                    <span>System Active</span>
+                </div>
+            </header>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <section class="overview-banner" id="overview">
+                <div>
+                    <p class="eyebrow">Daily Summary</p>
+                    <h2>Medication adherence and appointment visibility in one place</h2>
+                    <p>
+                        This dashboard helps elderly users and caregivers track medicines,
+                        review missed doses, manage appointments, and access emergency contacts quickly.
+                    </p>
+                </div>
+            </section>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <span>Total Today</span>
+                    <h3>{{ total_today }}</h3>
+                    <p>Scheduled medicines</p>
+                </div>
+                <div class="stat-card stat-success">
+                    <span>Taken</span>
+                    <h3>{{ taken_count }}</h3>
+                    <p>Completed doses</p>
+                </div>
+                <div class="stat-card stat-danger">
+                    <span>Skipped</span>
+                    <h3>{{ skipped_count }}</h3>
+                    <p>Missed / skipped doses</p>
+                </div>
+                <div class="stat-card stat-warning">
+                    <span>Pending</span>
+                    <h3>{{ pending_count }}</h3>
+                    <p>Awaiting confirmation</p>
+                </div>
+            </section>
+
+            <section class="content-grid" id="medicines">
+                <div class="panel">
+                    <div class="panel-head">
+                        <h2>Today's Medicines</h2>
+                        <span class="sub-badge">{{ today_name }}</span>
+                    </div>
+
+                    {% if medicines %}
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Medicine</th>
+                                    <th>Dosage</th>
+                                    <th>Time</th>
+                                    <th>Instructions</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for med in medicines %}
+                                <tr>
+                                    <td>{{ med.name }}</td>
+                                    <td>{{ med.dosage }}</td>
+                                    <td>{{ med.time }}</td>
+                                    <td>{{ med.note }}</td>
+                                    <td>
+                                        <span class="status-chip
+                                            {% if med.status_today == 'Taken' %}status-taken
+                                            {% elif med.status_today == 'Skipped' %}status-skipped
+                                            {% else %}status-pending
+                                            {% endif %}">
+                                            {{ med.status_today }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="action-row">
+                                            <form action="{{ url_for('mark_status', medicine_id=med.id, status='Taken') }}" method="POST">
+                                                <button type="submit" class="btn btn-success btn-sm">Taken</button>
+                                            </form>
+                                            <form action="{{ url_for('mark_status', medicine_id=med.id, status='Skipped') }}" method="POST">
+                                                <button type="submit" class="btn btn-danger btn-sm">Skipped</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="empty-box">No medicines scheduled for today.</div>
+                    {% endif %}
+                </div>
+
+                <div class="panel">
+                    <div class="panel-head">
+                        <h2>Add Medicine</h2>
+                        <span class="sub-badge">New Schedule</span>
+                    </div>
+
+                    <form action="{{ url_for('add_medicine') }}" method="POST" class="form-layout">
+                        <input type="text" name="name" placeholder="Medicine name" required>
+                        <input type="text" name="dosage" placeholder="Dosage" required>
+
+                        <div class="split-fields">
+                            <select name="day" required>
+                                <option value="">Select day</option>
+                                <option>Monday</option>
+                                <option>Tuesday</option>
+                                <option>Wednesday</option>
+                                <option>Thursday</option>
+                                <option>Friday</option>
+                                <option>Saturday</option>
+                                <option>Sunday</option>
+                            </select>
+                            <input type="time" name="time" required>
+                        </div>
+
+                        <input type="text" name="note" placeholder="Instructions">
+                        <button type="submit" class="btn btn-primary">Add Medicine</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="content-grid" id="appointments">
+                <div class="panel">
+                    <div class="panel-head">
+                        <h2>Doctor Appointments</h2>
+                        <span class="sub-badge">Upcoming</span>
+                    </div>
+
+                    {% if appointments %}
+                        <div class="card-list">
+                            {% for appt in appointments %}
+                            <div class="info-card">
+                                <div class="info-top">
+                                    <h4>{{ appt.doctor }}</h4>
+                                    <span class="mini-badge">{{ appt.date }}</span>
+                                </div>
+                                <p><strong>Hospital:</strong> {{ appt.hospital }}</p>
+                                <p><strong>Time:</strong> {{ appt.time }}</p>
+                                <p><strong>Purpose:</strong> {{ appt.purpose }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-box">No appointments available.</div>
+                    {% endif %}
+                </div>
+
+                <div class="panel">
+                    <div class="panel-head">
+                        <h2>Add Appointment</h2>
+                        <span class="sub-badge">Schedule</span>
+                    </div>
+
+                    <form action="{{ url_for('add_appointment') }}" method="POST" class="form-layout">
+                        <input type="text" name="doctor" placeholder="Doctor name" required>
+                        <input type="text" name="hospital" placeholder="Hospital name" required>
+
+                        <div class="split-fields">
+                            <input type="date" name="date" required>
+                            <input type="time" name="time" required>
+                        </div>
+
+                        <input type="text" name="purpose" placeholder="Purpose of visit" required>
+                        <button type="submit" class="btn btn-primary">Add Appointment</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="content-grid" id="contacts">
+                <div class="panel">
+                    <div class="panel-head">
+                        <h2>Emergency Contacts</h2>
+                        <span class="sub-badge sub-badge-danger">Priority</span>
+                    </div>
+
+                    {% if contacts %}
+                        <div class="card-list">
+                            {% for contact in contacts %}
+                            <div class="info-card emergency-card">
+                                <div class="info-top">
+                                    <h4>{{ contact.relation }}</h4>
+                                    <span class="mini-badge mini-badge-danger">Emergency</span>
+                                </div>
+                                <p>{{ contact.name }}</p>
+                                <p>📞 {{ contact.phone }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-box">No emergency contacts available.</div>
+                    {% endif %}
+                </div>
+
+                <div class="panel">
+                    <div class="panel-head">
+                        <h2>Add Emergency Contact</h2>
+                        <span class="sub-badge sub-badge-danger">Safety</span>
+                    </div>
+
+                    <form action="{{ url_for('add_contact') }}" method="POST" class="form-layout">
+                        <input type="text" name="contact_name" placeholder="Contact name" required>
+                        <input type="text" name="relation" placeholder="Relation" required>
+                        <input type="text" name="phone" placeholder="Phone number" required>
+                        <button type="submit" class="btn btn-danger">Add Emergency Contact</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="panel" id="history">
+                <div class="panel-head">
+                    <h2>Medicine History</h2>
+                    <span class="sub-badge">Records</span>
+                </div>
+
+                {% if history %}
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Medicine</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Updated At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in history %}
+                            <tr>
+                                <td>{{ item.date }}</td>
+                                <td>{{ item.medicine_name }}</td>
+                                <td>{{ item.time }}</td>
+                                <td>
+                                    <span class="status-chip {% if item.status == 'Taken' %}status-taken{% else %}status-skipped{% endif %}">
+                                        {{ item.status }}
+                                    </span>
+                                </td>
+                                <td>{{ item.updated_at }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-box">No history available.</div>
+                {% endif %}
+            </section>
+        </main>
+    </div>
+</body>
+</html>

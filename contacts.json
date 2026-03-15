@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "name": "Lakshmi",
+        "relation": "Daughter",
+        "phone": "9876543210"
+    },
+    {
+        "id": 2,
+        "name": "Raj",
+        "relation": "Son",
+        "phone": "9123456780"
+    },
+    {
+        "id": 3,
+        "name": "Dr. Kumar",
+        "relation": "Family Doctor",
+        "phone": "9840012345"
+    }
+]
